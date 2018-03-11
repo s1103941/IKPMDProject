@@ -31,7 +31,7 @@ public class UserController {
     private LoginActivity activity;
     private Toast toast;
     RequestQueue requestQueue;
-    String showUrl = "http://149.210.243.242/getUser.php";
+    String showUrl = "http://192.168.43.216/getUser.php";
     public UserModel currentuser;
 
     public UserController(){
@@ -78,17 +78,16 @@ public class UserController {
     }
 
         public boolean loginHey(String username, String password){
+        System.out.println("A test.");
         System.out.println(users);
         currentuser = new UserModel();
 
             for(UserModel user: users){
 
             if(username.equals(user.getUsername()) && password.equals(user.getPassword())){
-                System.out.println("We won " + user.getUsername() + user.getId());
                 currentuser.setUsername(user.getUsername());
                 currentuser.setPassword(user.getPassword());
                 currentuser.setID(user.getId());
-                System.out.println("This is the current user : " + currentuser.getUsername() + currentuser.getId());
                 return true;
             }
         }
