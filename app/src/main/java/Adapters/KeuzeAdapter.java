@@ -3,6 +3,7 @@ package Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +17,19 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.abdoul.ikpmdproject.KeuzeActivity;
 import com.example.abdoul.ikpmdproject.ListActivity;
 import com.example.abdoul.ikpmdproject.R;
 import com.example.abdoul.ikpmdproject.studentListActivity;
+import com.google.gson.Gson;
 
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +37,7 @@ import java.util.Map;
 
 import Models.KeuzeModel;
 import Models.UserModel;
+import Models.getIP;
 
 /**
  * Created by AndroidBash on 09/05/2016.
@@ -39,6 +48,7 @@ public class KeuzeAdapter extends RecyclerView.Adapter<KeuzeAdapter.ViewHolder> 
     private List<KeuzeModel> vakken;
     private UserModel currentUser;
     public static KeuzeModel clickedVak;
+    private getIP ip = new getIP();
 
 
     public KeuzeAdapter(Context context, List<KeuzeModel> vakken, UserModel currentUser) {
@@ -99,21 +109,27 @@ public class KeuzeAdapter extends RecyclerView.Adapter<KeuzeAdapter.ViewHolder> 
             btnButton3 = (Button) itemView.findViewById(R.id.button3);
             btnButton3.setText("Studenten");
 
+
             btnButton3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     clickedVak = vakken.get(getAdapterPosition());
                     Intent intent = new Intent(context, studentListActivity.class);
+                    intent.putExtra("Vak", new Gson().toJson(clickedVak));
                     context.startActivity(intent);
                 }
             });
 
+
             btnButton1.setOnClickListener(new View.OnClickListener() {
+
+
                 @Override
                 public void onClick(View view) {
-                    final int position = getAdapterPosition();
 
-                    String insertUrl = "http://145.52.148.55/addvak.php";
+                final int position = getAdapterPosition();
+
+                String insertUrl = "http://" + ip.getIP() + "/addvak.php";
                     StringRequest request = new StringRequest(Request.Method.POST, insertUrl, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {

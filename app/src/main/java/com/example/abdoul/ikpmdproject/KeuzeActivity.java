@@ -39,6 +39,7 @@ package com.example.abdoul.ikpmdproject;
         import Adapters.KeuzeAdapter;
         import Models.KeuzeModel;
         import Models.UserModel;
+        import Models.getIP;
 
 
 public class KeuzeActivity extends AppCompatActivity {
@@ -47,8 +48,9 @@ public class KeuzeActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private GridLayoutManager gridLayout;
     private KeuzeAdapter adapter;
+    private getIP ip = new getIP();
     RequestQueue requestQueue;
-    String showUrl = "http://145.52.148.55/uservak.php";
+    String showUrl = "http://" + ip.getIP() + "/uservak.php";
     public static UserModel currentGebruiker;
 
     // Setting up all the objects needed for the navigation drawer
@@ -71,7 +73,7 @@ public class KeuzeActivity extends AppCompatActivity {
         mDrawerList = (ListView)findViewById(R.id.navList);
         vakken = new ArrayList<>();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        getMoviesFromDB(0);
+        getVakkenFromDB(0);
 
         gridLayout = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(gridLayout);
@@ -177,7 +179,7 @@ public class KeuzeActivity extends AppCompatActivity {
 
 
 
-    private void getMoviesFromDB(int id) {
+    private void getVakkenFromDB(int id) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 showUrl,null, new Response.Listener<JSONObject>() {
             @Override
@@ -192,9 +194,10 @@ public class KeuzeActivity extends AppCompatActivity {
                         String modulecode  = student.getString("ModuleCode");
                         String ects = student.getString("Ects");
                         String periode = student.getString("Periode");
+                        int inschrijvingen = student.getInt("Inschrijvingen");
 
 
-                        KeuzeActivity.this.vakken.add(new KeuzeModel(vakID, modulecode, ects, periode));
+                        KeuzeActivity.this.vakken.add(new KeuzeModel(vakID, modulecode, ects, periode, inschrijvingen));
 
                     }
                     adapter = new KeuzeAdapter(KeuzeActivity.this, KeuzeActivity.this.vakken, KeuzeActivity.this.currentGebruiker);

@@ -1,8 +1,12 @@
 package com.example.abdoul.ikpmdproject;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -12,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,12 +25,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import Adapters.KeuzeAdapter;
+import Models.KeuzeModel;
 import Models.UserModel;
+import Models.getIP;
 
 public class studentListActivity extends AppCompatActivity {
 
     private ArrayList<UserModel> theUsers;
     private ArrayList<String> studentNames = new ArrayList<>();
+    private getIP ip = new getIP();
 
 
     @Override
@@ -33,13 +41,31 @@ public class studentListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_list);
         getStudentsByVak();
+        Button btnButton1 = (Button) findViewById(R.id.button);
+        btnButton1.setText("Toevoegen");
+
+        final Context context = this;
+        btnButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent i = getIntent();
+
+                String s = (String) i.getSerializableExtra("Vak");
+                KeuzeModel vak = new Gson().fromJson(s, KeuzeModel.class);
+                Intent intent = new Intent(context, StudentChartActivity.class);
+                intent.putExtra("Vak", new Gson().toJson(vak));
+                intent.putExtra("aantal", theUsers.size());
+                context.startActivity(intent);
+            }
+        });
     }
 
     public void getStudentsByVak(){
         theUsers = new ArrayList<>();
         final RequestQueue requestQueue;
         requestQueue = Volley.newRequestQueue(this);
-        String showUrl = "http://145.52.148.55/getUsers.php?KeuzevakID="+ KeuzeAdapter.clickedVak.getID();
+        String showUrl = "http://" + ip.getIP() + "/getUsers.php?KeuzevakID="+ KeuzeAdapter.clickedVak.getID();
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 showUrl, null, new Response.Listener<JSONObject>() {

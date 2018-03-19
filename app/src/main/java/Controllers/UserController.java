@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import Database.UserDAO;
 import Models.UserModel;
+import Models.getIP;
 
 /**
  * Created by abdoul on 13/01/2018.
@@ -31,8 +32,10 @@ public class UserController {
     private LoginActivity activity;
     private Toast toast;
     RequestQueue requestQueue;
-    String showUrl = "http://192.168.43.216/getUser.php";
+    private getIP ip = new getIP();
+    String showUrl = "http://" + ip.getIP() + "/getUser.php";
     public UserModel currentuser;
+
 
     public UserController(){
 

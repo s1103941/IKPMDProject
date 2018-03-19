@@ -10,16 +10,26 @@ public class KeuzeModel {
     private String ects;
     private String periode;
     private int ID;
+    private int inschrijvingen;
 
-    public KeuzeModel(int ID, String moduleCode, String ects, String periode){
+    public KeuzeModel(int ID, String moduleCode, String ects, String periode, int inschrijvingen){
         this.ID = ID;
         this.moduleCode = moduleCode;
         this.ects = ects;
         this.periode = periode;
+        this.inschrijvingen = inschrijvingen;
     }
 
     public void setPeriode(String periode) {
         this.periode = periode;
+    }
+
+    public void setInschrijvingen(int inschrijvingen) {
+        this.inschrijvingen = inschrijvingen;
+    }
+
+    public int getInschrijvingen() {
+        return inschrijvingen;
     }
 
     public void setEcts(String ects) {

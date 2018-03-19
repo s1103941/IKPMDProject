@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import Adapters.KeuzeAdapter;
 import Models.KeuzeModel;
 import Models.UserModel;
+import Models.getIP;
 
 /**
  * Created by abdoul on 16/01/2018.
@@ -34,6 +35,7 @@ public class ListActivity extends AppCompatActivity {
     private KeuzeAdapter adapter;
     private UserModel currentUser;
     private ArrayList<String> Vakken = new ArrayList<>();
+    private getIP ip = new getIP();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class ListActivity extends AppCompatActivity {
         userVakken = new ArrayList<>();
         final RequestQueue requestQueue;
         requestQueue = Volley.newRequestQueue(this);
-        String showUrl = "http://145.52.148.55/getUserVak.php?GebruikerID="+ currentUser.getId();
+        String showUrl = "http://" + ip.getIP() + "/getUserVak.php?GebruikerID="+ currentUser.getId();
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                 showUrl, null, new Response.Listener<JSONObject>() {
@@ -70,8 +72,8 @@ public class ListActivity extends AppCompatActivity {
                         String modulecode  = student.getString("ModuleCode");
                         String ects = student.getString("Ects");
                         String periode = student.getString("Periode");
-
-                        userVakken.add(new KeuzeModel(vakID,modulecode,ects,periode));
+                        int inschrijvingen = student.getInt("Inschrijvingen");
+                        userVakken.add(new KeuzeModel(vakID,modulecode,ects,periode, inschrijvingen));
 
                     }
 
