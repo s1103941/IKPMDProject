@@ -22,6 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.abdoul.ikpmdproject.KeuzeActivity;
 import com.example.abdoul.ikpmdproject.ListActivity;
+import com.example.abdoul.ikpmdproject.LoginActivity;
 import com.example.abdoul.ikpmdproject.R;
 import com.example.abdoul.ikpmdproject.studentListActivity;
 import com.google.gson.Gson;
@@ -31,10 +32,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import Controllers.UserController;
+import Database.DatabaseHelper;
 import Models.KeuzeModel;
 import Models.UserModel;
 import Models.getIP;
@@ -49,12 +53,14 @@ public class KeuzeAdapter extends RecyclerView.Adapter<KeuzeAdapter.ViewHolder> 
     private UserModel currentUser;
     public static KeuzeModel clickedVak;
     private getIP ip = new getIP();
+    private static DatabaseHelper mHelper;
 
 
     public KeuzeAdapter(Context context, List<KeuzeModel> vakken, UserModel currentUser) {
         this.context = context;
         this.vakken = vakken;
         this.currentUser = currentUser;
+        mHelper = new DatabaseHelper(context);
     }
 
 
@@ -127,39 +133,51 @@ public class KeuzeAdapter extends RecyclerView.Adapter<KeuzeAdapter.ViewHolder> 
                 @Override
                 public void onClick(View view) {
 
-                final int position = getAdapterPosition();
+                    final int position = getAdapterPosition();
 
-                String insertUrl = "http://" + ip.getIP() + "/addvak.php";
-                    StringRequest request = new StringRequest(Request.Method.POST, insertUrl, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
+                    final int vak = vakken.get(position).getID();
 
-                            if(response.toLowerCase().contains("duplicate")){
-                                Toast.makeText(context, "U staat hier al voor ingeschreven", Toast.LENGTH_SHORT).show();
+                    if (LoginActivity.networkConnected) {
+                        String insertUrl = "http://" + ip.getIP() + "/addvak.php";
+                        StringRequest request = new StringRequest(Request.Method.POST, insertUrl, new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+
+                                if (response.toLowerCase().contains("duplicate")) {
+                                    Toast.makeText(context, "U staat hier al voor ingeschreven", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
 
-                        }
-                    }) {
+                            }
+                        }) {
 
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            Map<String, String> parameters = new HashMap<String, String>();
-                            parameters.put("GebruikerID", Integer.toString(currentUser.getId()));
-                            parameters.put("KeuzevakID", Integer.toString(vakken.get(position).getID()));
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError {
+                                Map<String, String> parameters = new HashMap<String, String>();
+                                parameters.put("GebruikerID", Integer.toString(UserController.currentuser.getId()));
+                                parameters.put("KeuzevakID", Integer.toString(vak));
 
-                            return parameters;
-                        }
+                                return parameters;
+                            }
 
-                    };
-                    requestQueue.add(request);
+                        };
+                        requestQueue.add(request);
+                    }
+
+                    else {
+                       mHelper.addUserVak(UserController.currentuser.getId(), vak);
+                    }
+
                 }
 
 
-            });
+                });
+
+
+
 
 
         }

@@ -7,6 +7,6 @@ package Models;
 public class getIP {
 
     public String getIP(){
-        return "145.52.148.210";
+        return "145.52.151.136";
     }
 }

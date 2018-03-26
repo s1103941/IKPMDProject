@@ -1,8 +1,10 @@
 package com.example.abdoul.ikpmdproject;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -21,6 +23,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import Adapters.KeuzeAdapter;
+import Controllers.UserController;
+import Database.DatabaseHelper;
 import Models.KeuzeModel;
 import Models.UserModel;
 import Models.getIP;
@@ -36,6 +40,7 @@ public class ListActivity extends AppCompatActivity {
     private UserModel currentUser;
     private ArrayList<String> Vakken = new ArrayList<>();
     private getIP ip = new getIP();
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,54 +60,80 @@ public class ListActivity extends AppCompatActivity {
         final RequestQueue requestQueue;
         requestQueue = Volley.newRequestQueue(this);
         String showUrl = "http://" + ip.getIP() + "/getUserVak.php?GebruikerID="+ currentUser.getId();
+        listView = (ListView) findViewById(R.id.mylist);
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                showUrl, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    System.out.println("Debug time");
-                    System.out.println("Current user id is" + currentUser.getId());
-                    JSONArray gebruikers = response.getJSONArray("vakken");
-                    System.out.println(gebruikers);
-                    for (int i = 0; i < gebruikers.length(); i++) {
-                        JSONObject student = gebruikers.getJSONObject(i);
 
-                        int vakID = student.getInt("KeuzevakID");
-                        String modulecode  = student.getString("ModuleCode");
-                        String ects = student.getString("Ects");
-                        String periode = student.getString("Periode");
-                        int inschrijvingen = student.getInt("Inschrijvingen");
-                        userVakken.add(new KeuzeModel(vakID,modulecode,ects,periode, inschrijvingen));
+        if(LoginActivity.networkConnected){
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+                    showUrl, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        System.out.println("Debug time");
+                        System.out.println("Current user id is" + currentUser.getId());
+                        JSONArray gebruikers = response.getJSONArray("vakken");
+                        System.out.println(gebruikers);
+                        for (int i = 0; i < gebruikers.length(); i++) {
+                            JSONObject student = gebruikers.getJSONObject(i);
 
+                            int vakID = student.getInt("KeuzevakID");
+                            String modulecode  = student.getString("ModuleCode");
+                            String ects = student.getString("Ects");
+                            String periode = student.getString("Periode");
+                            int inschrijvingen = student.getInt("Inschrijvingen");
+                            userVakken.add(new KeuzeModel(vakID,modulecode,ects,periode, inschrijvingen));
+
+                        }
+                        for (int i = 0; i < userVakken.size(); i++ ) {
+                            Vakken.add(userVakken.get(i).getModuleCode());
+                            System.out.println(userVakken.get(i).getModuleCode());
+                        }
+
+                        ListAdapter myAdapter = new ArrayAdapter<String>(ListActivity.this, android.R.layout.simple_list_item_1, Vakken);
+                        listView.setAdapter(myAdapter);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
-                    ListView listView = (ListView) findViewById(R.id.mylist);
 
-                    for (int i = 0; i < userVakken.size(); i++ ) {
-                        Vakken.add(userVakken.get(i).getModuleCode());
-                        System.out.println(userVakken.get(i).getModuleCode());
-                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    System.out.append(error.getMessage());
 
-                    ListAdapter myAdapter = new ArrayAdapter<String>(ListActivity.this, android.R.layout.simple_list_item_1, Vakken);
-                    listView.setAdapter(myAdapter);
+                }
+            });
+            requestQueue.add(jsonObjectRequest);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
+        }
+
+        else {
+            DatabaseHelper mHelper = new DatabaseHelper(this);
+            Cursor data = mHelper.getVakkenById(UserController.currentuser.getId());
+            while(data.moveToNext()){
+                int vakID = data.getInt(0);
+                String modulecode  = data.getString(1);
+                String ects = data.getString(2);
+                String periode = data.getString(3);
+                int inschrijvingen = data.getInt(4);
+                userVakken.add(new KeuzeModel(vakID,modulecode,ects,periode, inschrijvingen));
+
+                for (int i = 0; i < userVakken.size(); i++ ) {
+                    Vakken.add(userVakken.get(i).getModuleCode());
+                    System.out.println(userVakken.get(i).getModuleCode());
                 }
 
+                ListAdapter myAdapter = new ArrayAdapter<String>(ListActivity.this, android.R.layout.simple_list_item_1, Vakken);
+                listView.setAdapter(myAdapter);
 
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.append(error.getMessage());
-
-            }
-        });
-        requestQueue.add(jsonObjectRequest);
 
 
+
+        }
 
     }
 

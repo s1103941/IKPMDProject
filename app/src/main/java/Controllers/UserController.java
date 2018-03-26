@@ -1,6 +1,8 @@
 package Controllers;
 
 import android.app.Activity;
+import android.database.Cursor;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -17,9 +19,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import Database.DatabaseHelper;
 import Database.UserDAO;
 import Models.UserModel;
 import Models.getIP;
+import com.example.abdoul.ikpmdproject.LoginActivity;
 
 /**
  * Created by abdoul on 13/01/2018.
@@ -34,7 +38,7 @@ public class UserController {
     RequestQueue requestQueue;
     private getIP ip = new getIP();
     String showUrl = "http://" + ip.getIP() + "/getUser.php";
-    public UserModel currentuser;
+    public static UserModel currentuser;
 
 
     public UserController(){
@@ -44,48 +48,64 @@ public class UserController {
     public UserController(Activity context) {
         users = new ArrayList<>();
         activity = new LoginActivity();
-        requestQueue = Volley.newRequestQueue(context);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                showUrl, null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    JSONArray gebruikers = response.getJSONArray("gebruikers");
-                    for (int i = 0; i < gebruikers.length(); i++) {
-                        JSONObject student = gebruikers.getJSONObject(i);
+        DatabaseHelper mDatabaseHelper = new DatabaseHelper(context);
 
-                        int GebruikerID = student.getInt("GebruikerID");
-                        String Gebruikersnaam = student.getString("Gebruikersnaam");
-                        String Wachtwoord = student.getString("Wachtwoord");
+        if (LoginActivity.networkConnected){
+            requestQueue = Volley.newRequestQueue(context);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+                    showUrl, null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        JSONArray gebruikers = response.getJSONArray("gebruikers");
+                        for (int i = 0; i < gebruikers.length(); i++) {
+                            JSONObject student = gebruikers.getJSONObject(i);
 
-                        users.add(new UserModel(GebruikerID, Gebruikersnaam, Wachtwoord));
+                            int GebruikerID = student.getInt("GebruikerID");
+                            String Gebruikersnaam = student.getString("Gebruikersnaam");
+                            String Wachtwoord = student.getString("Wachtwoord");
 
+                            users.add(new UserModel(GebruikerID, Gebruikersnaam, Wachtwoord));
+
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
+
                 }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    System.out.append(error.getMessage());
 
+                }
+            });
+            requestQueue.add(jsonObjectRequest);
+        }
 
-
+        else {
+            Cursor data = mDatabaseHelper.getUsers();
+            Log.d("Hewa", "Jackson");
+            while(data.moveToNext()){
+                UserModel userModel = new UserModel();
+                userModel.setID(data.getInt(0));
+                userModel.setUsername(data.getString(1));
+                userModel.setPassword(data.getString(2));
+                users.add(userModel);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.append(error.getMessage());
-
-            }
-        });
-        requestQueue.add(jsonObjectRequest);
+        }
 
     }
 
-        public boolean loginHey(String username, String password){
+    public boolean loginHey(String username, String password){
         System.out.println("A test.");
         System.out.println(users);
         currentuser = new UserModel();
 
-            for(UserModel user: users){
+        for(UserModel user: users){
 
             if(username.equals(user.getUsername()) && password.equals(user.getPassword())){
                 currentuser.setUsername(user.getUsername());
@@ -95,15 +115,13 @@ public class UserController {
             }
         }
         return false;
-        }
+    }
 
-        public UserModel getUser(){
-            return currentuser;
+    public UserModel getUser(){
+        return currentuser;
 
     }
 
-    }
-
-
+}
 
 

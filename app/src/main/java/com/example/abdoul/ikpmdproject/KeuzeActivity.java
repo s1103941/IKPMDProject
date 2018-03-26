@@ -1,45 +1,49 @@
 package com.example.abdoul.ikpmdproject;
 
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.database.Cursor;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
 
-        import android.content.Intent;
-        import android.content.res.Configuration;
-        import android.support.design.widget.NavigationView;
-        import android.support.v4.app.Fragment;
-        import android.support.v4.app.FragmentManager;
-        import android.support.v4.widget.DrawerLayout;
-        import android.support.v7.app.ActionBarDrawerToggle;
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
-        import android.support.v7.widget.GridLayoutManager;
-        import android.support.v7.widget.RecyclerView;
-        import android.support.v7.widget.Toolbar;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.widget.AdapterView;
-        import android.widget.ArrayAdapter;
-        import android.widget.Button;
-        import android.widget.ListView;
-        import android.widget.Toast;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.abdoul.ikpmdproject.ListActivity;
+import com.example.abdoul.ikpmdproject.R;
 
-        import com.android.volley.Request;
-        import com.android.volley.RequestQueue;
-        import com.android.volley.Response;
-        import com.android.volley.VolleyError;
-        import com.android.volley.toolbox.JsonObjectRequest;
-        import com.android.volley.toolbox.Volley;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-        import org.json.JSONArray;
-        import org.json.JSONException;
-        import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
-        import java.util.ArrayList;
-        import java.util.List;
-
-        import Adapters.KeuzeAdapter;
-        import Models.KeuzeModel;
-        import Models.UserModel;
-        import Models.getIP;
+import Adapters.KeuzeAdapter;
+import Database.DatabaseHelper;
+import Models.KeuzeModel;
+import Models.UserModel;
+import Models.getIP;
 
 
 public class KeuzeActivity extends AppCompatActivity {
@@ -58,7 +62,7 @@ public class KeuzeActivity extends AppCompatActivity {
     private ArrayAdapter<String> mAdapter;
     private ActionBarDrawerToggle mDrawerToggle;
     private DrawerLayout mDrawerLayout;
-
+    private DatabaseHelper mDatabaseHelper = new DatabaseHelper(this);
 
 
 
@@ -73,7 +77,8 @@ public class KeuzeActivity extends AppCompatActivity {
         mDrawerList = (ListView)findViewById(R.id.navList);
         vakken = new ArrayList<>();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        getVakkenFromDB(0);
+        getVakken();
+        getVakkenFromDB();
 
         gridLayout = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(gridLayout);
@@ -89,6 +94,12 @@ public class KeuzeActivity extends AppCompatActivity {
 
         addDrawerItems();
         setupDrawer();
+
+
+    }
+
+
+    public void getVakken(){
 
 
     }
@@ -179,49 +190,62 @@ public class KeuzeActivity extends AppCompatActivity {
 
 
 
-    private void getVakkenFromDB(int id) {
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
-                showUrl,null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                System.out.println(response.toString());
-                try {
-                    JSONArray vakken = response.getJSONArray("vakken");
-                    for (int i = 0; i < vakken.length(); i++) {
-                        JSONObject student = vakken.getJSONObject(i);
+    private void getVakkenFromDB() {
 
-                        int vakID = student.getInt("KeuzevakID");
-                        String modulecode  = student.getString("ModuleCode");
-                        String ects = student.getString("Ects");
-                        String periode = student.getString("Periode");
-                        int inschrijvingen = student.getInt("Inschrijvingen");
+        if(LoginActivity.networkConnected){
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
+                    showUrl,null, new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    System.out.println(response.toString());
+                    try {
+                        JSONArray vakken = response.getJSONArray("vakken");
+                        for (int i = 0; i < vakken.length(); i++) {
+                            JSONObject student = vakken.getJSONObject(i);
+
+                            int vakID = student.getInt("KeuzevakID");
+                            String modulecode  = student.getString("ModuleCode");
+                            String ects = student.getString("Ects");
+                            String periode = student.getString("Periode");
+                            int inschrijvingen = student.getInt("Inschrijvingen");
 
 
-                        KeuzeActivity.this.vakken.add(new KeuzeModel(vakID, modulecode, ects, periode, inschrijvingen));
+                            KeuzeActivity.this.vakken.add(new KeuzeModel(vakID, modulecode, ects, periode, inschrijvingen));
 
+                        }
+
+                        adapter = new KeuzeAdapter(KeuzeActivity.this, KeuzeActivity.this.vakken, KeuzeActivity.this.currentGebruiker);
+                        recyclerView.setAdapter(adapter);
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    adapter = new KeuzeAdapter(KeuzeActivity.this, KeuzeActivity.this.vakken, KeuzeActivity.this.currentGebruiker);
-                    recyclerView.setAdapter(adapter);
 
 
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    System.out.append(error.getMessage());
 
+                }
+            });
+            requestQueue.add(jsonObjectRequest);
+        }
 
+        else {
+            Cursor data = mDatabaseHelper.getVakken();
+            Log.d("Hewa", "Jackson");
+            while(data.moveToNext()){
+                KeuzeActivity.this.vakken.add(new KeuzeModel(data.getInt(0), data.getString(1), data.getString(2), data.getString(3), data.getInt(4)));
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                System.out.append(error.getMessage());
+            adapter = new KeuzeAdapter(KeuzeActivity.this, KeuzeActivity.this.vakken, KeuzeActivity.this.currentGebruiker);
+            recyclerView.setAdapter(adapter);
+        }
 
-            }
-        });
-        requestQueue.add(jsonObjectRequest);
     }
 
-    }
-
+}
 
 
