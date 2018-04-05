@@ -19,7 +19,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     // Database Name
-    private static final String DATABASE_NAME = "offlineDB";
+    private static final String DATABASE_NAME = "androiddabase";
     public final String createGebruiker = "CREATE TABLE Gebruiker (GebruikerID int (11) NOT NULL PRIMARY KEY UNIQUE, Gebruikersnaam varchar (255) NOT NULL, Wachtwoord varchar (255) NOT NULL);";
     public final String createGebruikerVak = "CREATE TABLE GebruikerVak (GebruikerID int (11) NOT NULL REFERENCES Gebruiker (GebruikerID) ON DELETE NO ACTION ON UPDATE NO ACTION, KeuzevakID int (11) NOT NULL REFERENCES Keuzevak (KeuzevakID) ON DELETE NO ACTION ON UPDATE NO ACTION, PRIMARY KEY (GebruikerID, KeuzevakID));";
     public final String createKeuzeVak = "CREATE TABLE Keuzevak (KeuzevakID int (11) NOT NULL PRIMARY KEY UNIQUE, ModuleCode varchar (255) DEFAULT NULL, Ects varchar (255) DEFAULT NULL, Periode varchar (255) DEFAULT NULL, Inschrijving INT (11));";

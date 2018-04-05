@@ -46,7 +46,7 @@ public class studentListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_student_list);
         getStudentsByVak();
         Button btnButton1 = (Button) findViewById(R.id.button);
-        btnButton1.setText("Toevoegen");
+        btnButton1.setText("Grafische weergave");
 
         final Context context = this;
         btnButton1.setOnClickListener(new View.OnClickListener() {

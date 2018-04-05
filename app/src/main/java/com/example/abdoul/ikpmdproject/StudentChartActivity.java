@@ -40,9 +40,6 @@ public class StudentChartActivity extends AppCompatActivity {
     private float[] yData = new float[2];
     private String[] xData = {"Totale studenten", "Inschrijvingen"};
     PieChart pieChart;
-    RequestQueue requestQueue;
-    private getIP ip = new getIP();
-    String showUrl = "http://" + ip.getIP() + "/getUserCount.php?KeuzevakID=1";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +59,10 @@ Log.d("HELLLOOOOO", vak.getModuleCode());
         yData[0] = (float) aantalStudenten;
         yData[1] = (float) vak.getInschrijvingen() - aantalStudenten;
 
-        Description description = new Description();
-        description.setText("A simple tutorial");
-        pieChart.setDescription(description);
         pieChart.setRotationEnabled(true);
-        //pieChart.setUsePercentValues(true);
-        //pieChart.setHoleColor(Color.BLUE);
-        //pieChart.setCenterTextColor(Color.BLACK);
+
         pieChart.setTransparentCircleAlpha(0);
 
-        //More options just check out the documentation!
 
         addDataSet();
 

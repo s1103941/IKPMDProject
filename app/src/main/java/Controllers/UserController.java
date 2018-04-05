@@ -51,6 +51,7 @@ public class UserController {
         DatabaseHelper mDatabaseHelper = new DatabaseHelper(context);
 
         if (LoginActivity.networkConnected){
+            Toast.makeText(context, "De app is in online mode.", Toast.LENGTH_LONG).show();
             requestQueue = Volley.newRequestQueue(context);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET,
                     showUrl, null, new Response.Listener<JSONObject>() {
@@ -87,8 +88,8 @@ public class UserController {
         }
 
         else {
+            Toast.makeText(context, "De app is in offline mode.", Toast.LENGTH_LONG).show();
             Cursor data = mDatabaseHelper.getUsers();
-            Log.d("Hewa", "Jackson");
             while(data.moveToNext()){
                 UserModel userModel = new UserModel();
                 userModel.setID(data.getInt(0));
@@ -101,7 +102,6 @@ public class UserController {
     }
 
     public boolean loginHey(String username, String password){
-        System.out.println("A test.");
         System.out.println(users);
         currentuser = new UserModel();
 
