@@ -64,7 +64,7 @@ public class KeuzeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.SimpleList);
+        setContentView(R.layout.simplelist);
         requestQueue = Volley.newRequestQueue(getApplicationContext());
 
 
@@ -222,7 +222,6 @@ public class KeuzeActivity extends AppCompatActivity {
 
         else {
             Cursor data = mDatabaseHelper.getVakken();
-            Log.d("Hewa", "Jackson");
             while(data.moveToNext()){
                 KeuzeActivity.this.vakken.add(new KeuzeModel(data.getInt(0), data.getString(1), data.getString(2), data.getString(3), data.getInt(4)));
             }

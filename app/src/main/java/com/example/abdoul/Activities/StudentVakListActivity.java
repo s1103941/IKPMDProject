@@ -44,7 +44,7 @@ public class StudentVakListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.StudentVakList);
+        setContentView(R.layout.studentvaklist);
         currentUser = KeuzeActivity.currentGebruiker;
         getVakkenById();
 

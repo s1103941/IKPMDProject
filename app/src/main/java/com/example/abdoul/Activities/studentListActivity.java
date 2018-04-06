@@ -121,7 +121,6 @@ public class studentListActivity extends AppCompatActivity {
         else {
             DatabaseHelper mHelper = new DatabaseHelper(this);
             Cursor data = mHelper.getUsersByVak(KeuzeAdapter.clickedVak.getID());
-            Log.d("Hewa", "Jackson");
             while(data.moveToNext()){
                 int GebruikerID = data.getInt(0);
                 String Gebruikersnaam = data.getString(1);

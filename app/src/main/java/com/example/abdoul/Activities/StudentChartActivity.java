@@ -49,9 +49,9 @@ public class StudentChartActivity extends AppCompatActivity {
 
 
         Intent i = getIntent();
+        int aantalStudenten = (int) i.getSerializableExtra("aantal");
 
         String s = (String) i.getSerializableExtra("Vak");
-        int aantalStudenten = (int) i.getSerializableExtra("aantal");
         KeuzeModel vak = new Gson().fromJson(s, KeuzeModel.class);
 
         pieChart = (PieChart) findViewById(R.id.chart);
