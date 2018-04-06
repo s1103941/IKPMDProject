@@ -2,7 +2,6 @@ package Controllers;
 
 import android.app.Activity;
 import android.database.Cursor;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -11,7 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.abdoul.ikpmdproject.LoginActivity;
+import com.example.abdoul.Activities.LoginActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,10 +19,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import Database.DatabaseHelper;
-import Database.UserDAO;
 import Models.UserModel;
 import Models.getIP;
-import com.example.abdoul.ikpmdproject.LoginActivity;
 
 /**
  * Created by abdoul on 13/01/2018.
@@ -31,7 +28,6 @@ import com.example.abdoul.ikpmdproject.LoginActivity;
 
 public class UserController {
 
-    private UserDAO dao;
     private ArrayList<UserModel> users;
     private LoginActivity activity;
     private Toast toast;
@@ -101,7 +97,7 @@ public class UserController {
 
     }
 
-    public boolean loginHey(String username, String password){
+    public boolean login(String username, String password){
         System.out.println(users);
         currentuser = new UserModel();
 

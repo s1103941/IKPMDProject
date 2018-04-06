@@ -1,18 +1,18 @@
-package com.example.abdoul.ikpmdproject;
+package com.example.abdoul.Activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.abdoul.ikpmdproject.R;
 
 import Controllers.UserController;
 import Models.UserModel;
@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
             String username = userText.getText().toString();
             String password = passText.getText().toString();
 
-            if (!controller.loginHey(username,password)){
+            if (!controller.login(username,password)){
                 Snackbar mySnack = Snackbar.make(v, "Verkeerde gegevens ingevoerd", 3000);
                 mySnack.show();
             }

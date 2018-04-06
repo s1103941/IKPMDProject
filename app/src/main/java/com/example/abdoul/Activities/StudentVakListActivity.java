@@ -1,10 +1,8 @@
-package com.example.abdoul.ikpmdproject;
+package com.example.abdoul.Activities;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -15,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.abdoul.ikpmdproject.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,7 +32,7 @@ import Models.getIP;
  * Created by abdoul on 16/01/2018.
  */
 
-public class ListActivity extends AppCompatActivity {
+public class StudentVakListActivity extends AppCompatActivity {
 
     private ArrayList<KeuzeModel> userVakken;
     private KeuzeAdapter adapter;
@@ -45,7 +44,7 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.user_vak_list);
+        setContentView(R.layout.StudentVakList);
         currentUser = KeuzeActivity.currentGebruiker;
         getVakkenById();
 
@@ -69,8 +68,7 @@ public class ListActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        System.out.println("Debug time");
-                        System.out.println("Current user id is" + currentUser.getId());
+
                         JSONArray gebruikers = response.getJSONArray("vakken");
                         System.out.println(gebruikers);
                         for (int i = 0; i < gebruikers.length(); i++) {
@@ -89,7 +87,7 @@ public class ListActivity extends AppCompatActivity {
                             System.out.println(userVakken.get(i).getModuleCode());
                         }
 
-                        ListAdapter myAdapter = new ArrayAdapter<String>(ListActivity.this, android.R.layout.simple_list_item_1, Vakken);
+                        ListAdapter myAdapter = new ArrayAdapter<String>(StudentVakListActivity.this, android.R.layout.simple_list_item_1, Vakken);
                         listView.setAdapter(myAdapter);
 
                     } catch (JSONException e) {
@@ -126,7 +124,7 @@ public class ListActivity extends AppCompatActivity {
                     System.out.println(userVakken.get(i).getModuleCode());
                 }
 
-                ListAdapter myAdapter = new ArrayAdapter<String>(ListActivity.this, android.R.layout.simple_list_item_1, Vakken);
+                ListAdapter myAdapter = new ArrayAdapter<String>(StudentVakListActivity.this, android.R.layout.simple_list_item_1, Vakken);
                 listView.setAdapter(myAdapter);
 
             }

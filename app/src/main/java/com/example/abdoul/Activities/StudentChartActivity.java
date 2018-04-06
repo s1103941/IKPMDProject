@@ -1,4 +1,4 @@
-package com.example.abdoul.ikpmdproject;
+package com.example.abdoul.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.abdoul.ikpmdproject.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -52,7 +53,6 @@ public class StudentChartActivity extends AppCompatActivity {
         String s = (String) i.getSerializableExtra("Vak");
         int aantalStudenten = (int) i.getSerializableExtra("aantal");
         KeuzeModel vak = new Gson().fromJson(s, KeuzeModel.class);
-Log.d("HELLLOOOOO", vak.getModuleCode());
 
         pieChart = (PieChart) findViewById(R.id.chart);
 

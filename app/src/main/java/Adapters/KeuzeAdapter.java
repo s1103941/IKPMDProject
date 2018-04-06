@@ -3,7 +3,6 @@ package Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,22 +16,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.abdoul.ikpmdproject.KeuzeActivity;
-import com.example.abdoul.ikpmdproject.ListActivity;
-import com.example.abdoul.ikpmdproject.LoginActivity;
+import com.example.abdoul.Activities.LoginActivity;
 import com.example.abdoul.ikpmdproject.R;
-import com.example.abdoul.ikpmdproject.studentListActivity;
+import com.example.abdoul.Activities.studentListActivity;
 import com.google.gson.Gson;
 
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +63,7 @@ public class KeuzeAdapter extends RecyclerView.Adapter<KeuzeAdapter.ViewHolder> 
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.customlayout, viewGroup, false);
+                .inflate(R.layout.keuzevakkenlist, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(v);
         return viewHolder;
     }
@@ -80,7 +71,7 @@ public class KeuzeAdapter extends RecyclerView.Adapter<KeuzeAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        holder.movieName.setText(vakken.get(position).getModuleCode());
+        holder.vakCard.setText(vakken.get(position).getModuleCode());
     }
 
 
@@ -95,8 +86,8 @@ public class KeuzeAdapter extends RecyclerView.Adapter<KeuzeAdapter.ViewHolder> 
 
     public  class ViewHolder extends  RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView movieName;
-        public TextView movieGenre;
+        public TextView vakCard;
+        public TextView puntenCard;
         public Button btnButton1;
         public Button btnButton2;
         public Button btnButton3;
@@ -108,8 +99,8 @@ public class KeuzeAdapter extends RecyclerView.Adapter<KeuzeAdapter.ViewHolder> 
             requestQueue = Volley.newRequestQueue(context);
 
 
-            movieName = (TextView) itemView.findViewById(R.id.moviename);
-            movieGenre = (TextView) itemView.findViewById(R.id.genre);
+            vakCard = (TextView) itemView.findViewById(R.id.vakCard);
+            puntenCard = (TextView) itemView.findViewById(R.id.puntenCard);
             btnButton1 = (Button) itemView.findViewById(R.id.button1);
             btnButton1.setText("Toevoegen");
             btnButton3 = (Button) itemView.findViewById(R.id.button3);

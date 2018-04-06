@@ -7,7 +7,7 @@
     android:id="@+id/mainLayout"
     android:background="@color/secondaryColor"
 
-    tools:context="com.example.abdoul.ikpmdproject.StudentChartActivity">
+    tools:context="com.example.abdoul.ikpmdproject.com.example.abdoul.Activities.StudentChartActivity">
 
     <com.github.mikephil.charting.charts.PieChart
         android:layout_width="match_parent"

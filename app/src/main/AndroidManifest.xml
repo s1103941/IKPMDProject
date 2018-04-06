@@ -13,18 +13,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight">
-        <activity android:name=".LoginActivity">
+        <activity android:name="com.example.abdoul.Activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".KeuzeActivity" />
-        <activity android:name=".ListActivity" />
-        <activity android:name=".studentListActivity" />
+        <activity android:name="com.example.abdoul.Activities.KeuzeActivity" />
+        <activity android:name="com.example.abdoul.Activities.StudentVakListActivity" />
+        <activity android:name="com.example.abdoul.Activities.studentListActivity" />
         <activity
-            android:name=".StudentChartActivity"
+            android:name="com.example.abdoul.Activities.StudentChartActivity"
             android:label="@string/title_activity_student_chart"
             android:theme="@style/AppTheme"></activity>
     </application>

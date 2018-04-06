@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/secondaryColor"
 
-    tools:context="com.example.abdoul.ikpmdproject.studentListActivity">
+    tools:context="com.example.abdoul.ikpmdproject.com.example.abdoul.Activities.studentListActivity">
 
     <ListView
         android:layout_width="match_parent"

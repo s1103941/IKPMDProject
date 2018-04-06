@@ -22,7 +22,7 @@
 
 
             <TextView
-                android:id="@+id/moviename"
+                android:id="@+id/vakCard"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:paddingLeft="5dp"
@@ -34,10 +34,10 @@
                 android:typeface="sans" />
 
             <TextView
-                android:id="@+id/genre"
+                android:id="@+id/puntenCard"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_below="@id/moviename"
+                android:layout_below="@id/vakCard"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingTop="5dp"
@@ -55,7 +55,7 @@
                 android:id="@+id/button1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/genre"
+                android:layout_below="@+id/puntenCard"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingTop="5dp"
